@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ExcelAI Tutor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="bg-gray-100 font-roboto">
+    <!-- Navbar -->
+    <header class="bg-white shadow-md py-4 px-6">
+      <nav class="flex justify-between items-center">
+        <div class="text-xl font-bold text-gray-700">ExcelAI Tutor</div>
+        <ul class="flex space-x-6">
+          <li>
+            <a href="#" class="text-gray-600 hover:text-blue-500">Home</a>
+          </li>
+          <li>
+            <a href="#" class="text-gray-600 hover:text-blue-500">Features</a>
+          </li>
+          <li>
+            <a href="#" class="text-gray-600 hover:text-blue-500">Contact</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-12 px-6">
+      <h1
+        class="text-center font-extrabold text-gray-800 text-[42px] sm:text-[52px] mb-8"
+      >
+        Select Your Tutor Avatar
+      </h1>
+
+      <p class="text-center text-gray-600 text-lg mb-10">
+        Choose an avatar that suits your learning style and preferences.
+      </p>
+
+      <!-- Avatar Selection -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+        <div
+          class="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105"
+        >
+          <a href="frontend.html">
+            <img
+              src="./images/Thumbnail.png"
+              alt="Avatar 1"
+              class="h-[200px] w-full object-cover"
+            />
+            <div class="p-4 text-center">
+              <h3 class="text-lg font-semibold text-gray-800">Tutor A</h3>
+              <button
+                class="mt-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+              >
+                Select
+              </button>
+            </div>
+          </a>
+        </div>
+
+        <div
+          class="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105"
+        >
+          <a href="frontend.html">
+            <img
+              src="./images/img1.webp"
+              alt="Avatar 2"
+              class="h-[200px] w-full object-cover"
+            />
+            <div class="p-4 text-center">
+              <h3 class="text-lg font-semibold text-gray-800">Tutor B</h3>
+              <button
+                class="mt-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+              >
+                Select
+              </button>
+            </div>
+          </a>
+        </div>
+
+        <div
+          class="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105"
+        >
+          <img
+            src="./images/photo1.png"
+            alt="Avatar 3"
+            class="h-[200px] w-full object-conver"
+          />
+          <div class="p-4 text-center">
+            <h3 class="text-lg font-semibold text-gray-800">Tutor C</h3>
+            <button
+              class="mt-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            >
+              Select
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-200 py-6 mt-12">
+      <div class="max-w-7xl mx-auto text-center">
+        <p>&copy; 2025 ExcelAI Tutor. All rights reserved.</p>
+        <p class="mt-2">Designed with ❤️ by ExcelAI Team</p>
+      </div>
+    </footer>
+  </body>
+</html>

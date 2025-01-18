@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ExcelAI Video Player</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 text-white font-sans min-h-screen flex flex-col items-center justify-center"
+  >
+    <!-- Header -->
+    <header class="text-center mb-8">
+      <h1 class="text-4xl font-bold mb-2">
+        ExcelAI Virtual Learning Experience
+      </h1>
+      <p class="text-lg text-gray-200">
+        Your AI-powered interactive video learning.
+      </p>
+    </header>
+
+    <!-- Video Player Section -->
+    <div class="relative w-full max-w-4xl">
+      <!-- Dynamic Text Overlay -->
+      <div
+        id="videoText"
+        class="flex flex-col items-center justify-center bg-black bg-opacity-70 text-white text-2xl font-bold hidden"
+      >
+        <p class="px-4">🎥 The video is playing...</p>
+        <p class="text-sm text-gray-300 mt-2">
+          Enjoy your AI-powered content experience!
+        </p>
+      </div>
+      <div class="flex flex-col md:flex-row justify-center items-center gap-6">
+        <!-- Video Container -->
+        <div id="videoContainer" class="relative rounded-lg overflow-hidden">
+          <!-- Video Player -->
+          <video
+            id="videoPlayer"
+            class="w-3/4 object-cover rounded-lg"
+            poster="./images/Thumbnail.png"
+            controls
+          ></video>
+
+          <!-- Action Buttons -->
+          <div class="absolute bottom-4 left-4 flex space-x-4">
+            <!-- Record Button -->
+            <button
+              id="recordButton"
+              aria-label="Record"
+              class="w-12 h-12 bg-gradient-to-r from-red-500 to-red-700 rounded-full shadow-md flex items-center justify-center text-white text-lg hover:scale-110 transition-transform"
+            >
+              <i class="fa fa-microphone"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Video Description Section -->
+        <!-- <div class="mt-6 text-center border" id="text-container"></div> -->
+      </div>
+    </div>
+
+    <!-- FontAwesome Icons -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js"
+      integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="frontend.js"></script>
+  </body>
+</html>
