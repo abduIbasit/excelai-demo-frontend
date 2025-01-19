@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ExcelAI Video Player</title>
+    <title>ExcelAI Virtual Tutor</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body
@@ -14,10 +14,14 @@
       <h1 class="text-4xl font-bold mb-2">
         ExcelAI Virtual Learning Experience
       </h1>
-      <p class="text-lg text-gray-200">
-        Your AI-powered interactive video learning.
-      </p>
+        <p class="text-lg text-gray-100">
+          <!-- Your AI-powered interactive video learning. -->
+        </p>
     </header>
+
+    <p class="text-lg text-gray-100">
+      Click the red microphone icon to start
+    </p>
 
     <!-- Video Player Section -->
     <div class="relative w-full max-w-4xl">
@@ -37,10 +41,10 @@
           <!-- Video Player -->
           <video
             id="videoPlayer"
-            class="w-3/4 object-cover rounded-lg"
+            class="w-4/4 object-cover rounded-lg"
             poster="./images/Thumbnail.png"
-            controls
-          ></video>
+          >
+        </video>
 
           <!-- Action Buttons -->
           <div class="absolute bottom-4 left-4 flex space-x-4">
