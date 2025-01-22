@@ -24,6 +24,23 @@ function stopHeartbeat() {
   }
 }
 
+// Select the camera feed video element
+const cameraFeed = document.getElementById("cameraFeed");
+
+// Start the camera feed
+async function startCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    cameraFeed.srcObject = stream;
+  } catch (error) {
+    console.error("Error accessing the camera:", error);
+  }
+}
+
+// Automatically start the camera feed when the page loads
+document.addEventListener("DOMContentLoaded", startCamera);
+
+
 // Record voice
 recordButton.addEventListener("click", async () => {
   if (!mediaRecorder) {

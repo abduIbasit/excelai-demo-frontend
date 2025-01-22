@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ExcelAI Virtual Tutor</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Prevent the video player from resizing */
+      #videoPlayer {
+        width: 700px; /* Fixed width */
+        height: 360px; /* Fixed height */
+      }
+
+      /* Left-align text above the video player */
+      .text-above {
+        text-align: left;
+        margin-bottom: 8px;
+        width: 640px; /* Match the video player's width */
+      }
+    </style>
   </head>
   <body
     class="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 text-white font-sans min-h-screen flex flex-col items-center justify-center"
@@ -14,54 +28,53 @@
       <h1 class="text-4xl font-bold mb-2">
         ExcelAI Virtual Learning Experience
       </h1>
-        <p class="text-lg text-gray-100">
-          <!-- Your AI-powered interactive video learning. -->
-        </p>
+      <p class="text-lg text-gray-100">
+        <!-- Your AI-powered interactive video learning. -->
+      </p>
     </header>
 
-    <p class="text-lg text-gray-100">
-      Click the red microphone icon to start
-    </p>
+    <!-- Video Section -->
+    <div class="flex flex-col items-center">
+      <!-- Instruction Text -->
+      <p class="text-md text-gray-100 text-above">
+        * Click the red microphone icon to record your voice
+      </p>
 
-    <!-- Video Player Section -->
-    <div class="relative w-full max-w-4xl">
-      <!-- Dynamic Text Overlay -->
-      <div
-        id="videoText"
-        class="flex flex-col items-center justify-center bg-black bg-opacity-70 text-white text-2xl font-bold hidden"
-      >
-        <p class="px-4">🎥 The video is playing...</p>
-        <p class="text-sm text-gray-300 mt-2">
-          Enjoy your AI-powered content experience!
-        </p>
-      </div>
-      <div class="flex flex-col md:flex-row justify-center items-center gap-6">
-        <!-- Video Container -->
-        <div id="videoContainer" class="relative rounded-lg overflow-hidden">
-          <!-- Video Player -->
-          <video
-            id="videoPlayer"
-            class="w-4/4 object-cover rounded-lg"
-            poster="./images/Thumbnail.png"
+      <!-- Video Player Section -->
+      <div class="relative rounded-lg overflow-hidden shadow-lg">
+        <!-- Video Player -->
+        <video
+          id="videoPlayer"
+          class="object-cover rounded-lg"
+          poster="./images/Thumbnail.png"
+        ></video>
+
+        <!-- Action Buttons -->
+        <div class="absolute bottom-4 left-4 flex space-x-4">
+          <!-- Record Button -->
+          <button
+            id="recordButton"
+            aria-label="Record"
+            class="w-12 h-12 bg-gradient-to-r from-red-500 to-red-700 rounded-full shadow-md flex items-center justify-center text-white text-lg hover:scale-110 transition-transform"
           >
-        </video>
-
-          <!-- Action Buttons -->
-          <div class="absolute bottom-4 left-4 flex space-x-4">
-            <!-- Record Button -->
-            <button
-              id="recordButton"
-              aria-label="Record"
-              class="w-12 h-12 bg-gradient-to-r from-red-500 to-red-700 rounded-full shadow-md flex items-center justify-center text-white text-lg hover:scale-110 transition-transform"
-            >
-              <i class="fa fa-microphone"></i>
-            </button>
-          </div>
+            <i class="fa fa-microphone"></i>
+          </button>
         </div>
-
-        <!-- Video Description Section -->
-        <!-- <div class="mt-6 text-center border" id="text-container"></div> -->
       </div>
+    </div>
+
+    <!-- Camera Feed Section -->
+    <div
+      id="cameraContainer"
+      class="fixed bottom-4 right-4 w-[200px] h-[180px] bg-black rounded-lg overflow-hidden shadow-lg flex items-center justify-center"
+    >
+      <video
+        id="cameraFeed"
+        class="w-full h-full object-cover"
+        autoplay
+        playsinline
+        muted
+      ></video>
     </div>
 
     <!-- FontAwesome Icons -->
