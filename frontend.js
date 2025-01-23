@@ -78,12 +78,17 @@ recordButton.addEventListener("click", async () => {
 
         websocket.onmessage = (event) => {
           const message = JSON.parse(event.data);
+
+          if (message) {
+            console.log("Received message in client");
+            console.log(message);
+          }
           // Check if the stream object and video_chunk exist
-          if (message.stream && message.stream.video_chunk) {
+          if (message.stream && message.stream.video_stream) {
             console.log("Received video");
 
             try {
-              const base64String = message.stream.video_chunk;
+              const base64String = message.stream.video_stream;
               const byteCharacters = atob(base64String); // Decode Base64
               const byteNumbers = Array.from(byteCharacters, (char) =>
                 char.charCodeAt(0)
