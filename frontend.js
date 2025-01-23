@@ -81,7 +81,7 @@ recordButton.addEventListener("click", async () => {
 
           if (message) {
             console.log("Received message in client");
-            console.log(message);
+            // console.log(message);
           }
           // Check if the stream object and video_chunk exist
           if (message.stream && message.stream.video_stream) {
