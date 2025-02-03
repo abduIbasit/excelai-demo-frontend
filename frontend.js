@@ -57,7 +57,7 @@ recordButton.addEventListener("click", async () => {
       // Initialize WebSocket if not already connected
       if (!websocket || websocket.readyState === WebSocket.CLOSED) {
         websocket = new WebSocket(
-          "wss://excelai-ml-model-api.vastlearn.io/ws/conversation"
+          "ws://127.0.0.1:8000/ws/conversation"
         );
         websocket.onopen = () => {
           console.log("WebSocket connection established");
@@ -78,6 +78,7 @@ recordButton.addEventListener("click", async () => {
 
         websocket.onmessage = (event) => {
           const message = JSON.parse(event.data);
+          console.log(message)
 
           if (message) {
             console.log("Received message in client");
