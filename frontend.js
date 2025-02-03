@@ -56,9 +56,7 @@ recordButton.addEventListener("click", async () => {
 
       // Initialize WebSocket if not already connected
       if (!websocket || websocket.readyState === WebSocket.CLOSED) {
-        websocket = new WebSocket(
-          "ws://127.0.0.1:8000/ws/conversation"
-        );
+        websocket = new WebSocket("wss://ec2-44-222-169-137.compute-1.amazonaws.com/ws/conversation");
         websocket.onopen = () => {
           console.log("WebSocket connection established");
           websocket.send(
