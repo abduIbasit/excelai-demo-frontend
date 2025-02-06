@@ -48,7 +48,7 @@
           class="object-cover rounded-lg"
           poster="./images/Thumbnail.png"
         >
-        <source src="http://127.0.0.1:8080" type="video/flv">
+        <source src="http://ec2-44-222-169-137.compute-1.amazonaws.com:8080/hls/stream.m3u8" type="video/flv">
       </video>
 
         <!-- Action Buttons -->
@@ -87,5 +87,42 @@
       referrerpolicy="no-referrer"
     ></script>
     <script src="frontend.js"></script>
+    <!-- hls.js library for HLS playback in browsers -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+      var video = document.getElementById('videoPlayer');
+      // Use HTTP on port 8080 since NGINX is serving HLS over HTTP
+      var videoSrc = 'http://ec2-44-222-169-137.compute-1.amazonaws.com:8080/hls/stream.m3u8';
+      
+      if (Hls.isSupported()) {
+      // Adjust hls.js configuration for live low-latency playback
+      var hlsConfig = {
+        maxBufferLength: 5,         // Maximum buffer length in seconds
+        maxBufferSize: 0,           // 0 disables a fixed byte limit (use duration instead)
+        liveSyncDuration: 1,        // Target live sync duration in seconds
+        // liveSyncDurationCount: 1,   // Use segment count based sync (if needed)
+        enableWorker: true          // Offload parsing to web worker
+      };
+      var hls = new Hls(hlsConfig);
+      hls.loadSource(videoSrc);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, function () {
+          // Try to play the video. Autoplay should work since the video is muted.
+          video.play().catch(function (error) {
+              console.error("Error playing video:", error);
+          });
+      });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      // For Safari which supports HLS natively
+      video.src = videoSrc;
+      video.addEventListener('loadedmetadata', function () {
+          video.play().catch(function (error) {
+              console.error("Error playing video:", error);
+          });
+      });
+    } else {
+      console.error("HLS is not supported in this browser");
+    }
+    </script>
   </body>
 </html>

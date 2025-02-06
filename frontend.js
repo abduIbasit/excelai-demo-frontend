@@ -74,37 +74,37 @@ recordButton.addEventListener("click", async () => {
           stopHeartbeat(); // Stop sending heartbeat messages
         };
 
-        websocket.onmessage = (event) => {
-          const message = JSON.parse(event.data);
-          console.log(message)
+        // websocket.onmessage = (event) => {
+        //   const message = JSON.parse(event.data);
+        //   console.log(message)
 
-          if (message) {
-            console.log("Received message in client");
-            // console.log(message);
-          }
-          // Check if the stream object and video_chunk exist
-          if (message.stream && message.stream.video_stream) {
-            console.log("Received video");
+        //   if (message) {
+        //     console.log("Received message in client");
+        //     // console.log(message);
+        //   }
+        //   // Check if the stream object and video_chunk exist
+        //   if (message.stream && message.stream.video_stream) {
+        //     console.log("Received video");
 
-            try {
-              const base64String = message.stream.video_stream;
-              const byteCharacters = atob(base64String); // Decode Base64
-              const byteNumbers = Array.from(byteCharacters, (char) =>
-                char.charCodeAt(0)
-              ); // Convert to byte numbers
-              const byteArray = new Uint8Array(byteNumbers); // Create a Uint8Array
-              const blob = new Blob([byteArray], { type: "video/mp4" }); // Create a Blob
+        //     try {
+        //       const base64String = message.stream.video_stream;
+        //       const byteCharacters = atob(base64String); // Decode Base64
+        //       const byteNumbers = Array.from(byteCharacters, (char) =>
+        //         char.charCodeAt(0)
+        //       ); // Convert to byte numbers
+        //       const byteArray = new Uint8Array(byteNumbers); // Create a Uint8Array
+        //       const blob = new Blob([byteArray], { type: "video/mp4" }); // Create a Blob
 
-              // Set the video source and play
-              videoPlayer.src = URL.createObjectURL(blob);
-              videoPlayer.play().catch((err) => {
-                console.error("Error playing video:", err);
-              });
-            } catch (error) {
-              console.error("Error decoding video chunk:", error);
-            }
-          }
-        };
+        //       // Set the video source and play
+        //       videoPlayer.src = URL.createObjectURL(blob);
+        //       videoPlayer.play().catch((err) => {
+        //         console.error("Error playing video:", err);
+        //       });
+        //     } catch (error) {
+        //       console.error("Error decoding video chunk:", error);
+        //     }
+        //   }
+        // };
       } else {
         websocket.send(
           JSON.stringify({ session_id: "wool", audio: audioBase64 })
