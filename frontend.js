@@ -40,9 +40,20 @@ async function startCamera() {
 // Automatically start the camera feed when the page loads
 document.addEventListener("DOMContentLoaded", startCamera);
 
-
 // Record voice
 recordButton.addEventListener("click", async () => {
+  // Clear/reset the polling interval when the user clicks the record button.
+  if (pollingInterval) {
+    clearInterval(pollingInterval);
+    pollingInterval = null;
+  }
+  // Also, if hls.js is running, destroy it so that the client will wait for a new stream.
+  if (hls) {
+    hls.destroy();
+    hls = null;
+  }
+  // statusDiv.textContent = "Recording audio and generating stream...";
+  
   if (!mediaRecorder) {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     mediaRecorder = new MediaRecorder(stream);
@@ -50,13 +61,13 @@ recordButton.addEventListener("click", async () => {
       audioChunks.push(event.data);
     };
     mediaRecorder.onstop = async () => {
-      const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+      const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
       audioChunks = [];
       const audioBase64 = await blobToBase64(audioBlob);
 
       // Initialize WebSocket if not already connected
       if (!websocket || websocket.readyState === WebSocket.CLOSED) {
-        websocket = new WebSocket("wss://ec2-44-222-169-137.compute-1.amazonaws.com/ws/conversation");
+        websocket = new WebSocket("wss://ec2-44-210-103-222.compute-1.amazonaws.com/ws/conversation");
         websocket.onopen = () => {
           console.log("WebSocket connection established");
           websocket.send(
@@ -74,42 +85,13 @@ recordButton.addEventListener("click", async () => {
           stopHeartbeat(); // Stop sending heartbeat messages
         };
 
-        // websocket.onmessage = (event) => {
-        //   const message = JSON.parse(event.data);
-        //   console.log(message)
-
-        //   if (message) {
-        //     console.log("Received message in client");
-        //     // console.log(message);
-        //   }
-        //   // Check if the stream object and video_chunk exist
-        //   if (message.stream && message.stream.video_stream) {
-        //     console.log("Received video");
-
-        //     try {
-        //       const base64String = message.stream.video_stream;
-        //       const byteCharacters = atob(base64String); // Decode Base64
-        //       const byteNumbers = Array.from(byteCharacters, (char) =>
-        //         char.charCodeAt(0)
-        //       ); // Convert to byte numbers
-        //       const byteArray = new Uint8Array(byteNumbers); // Create a Uint8Array
-        //       const blob = new Blob([byteArray], { type: "video/mp4" }); // Create a Blob
-
-        //       // Set the video source and play
-        //       videoPlayer.src = URL.createObjectURL(blob);
-        //       videoPlayer.play().catch((err) => {
-        //         console.error("Error playing video:", err);
-        //       });
-        //     } catch (error) {
-        //       console.error("Error decoding video chunk:", error);
-        //     }
-        //   }
-        // };
       } else {
         websocket.send(
           JSON.stringify({ session_id: "wool", audio: audioBase64 })
         );
       }
+
+      startPolling();
     };
   }
 
@@ -132,4 +114,87 @@ function blobToBase64(blob) {
     reader.readAsDataURL(blob);
   });
 }
-//=w#m4L:#Ho4COWcG*3Yw
+
+var video = document.getElementById('videoPlayer');
+// const statusDiv = document.getElementById('status');
+// Use HTTP on port 8080 since NGINX is serving HLS over HTTP
+var videoSrc = 'http://ec2-44-210-103-222.compute-1.amazonaws.com:8080/hls/stream.m3u8';
+
+// hls.js configuration for low latency live streaming
+const hlsConfig = {
+  maxBufferLength: 5,         // Maximum buffer length in seconds
+  maxBufferSize: 0,           // 0 disables a fixed byte limit (using duration instead)
+  liveSyncDuration: 1,        // Target live sync duration in seconds
+  enableWorker: true          // Offload parsing to a web worker
+};
+
+let hls = null;
+let pollingInterval = null;
+
+// Function to initialize or reinitialize hls.js
+function initializeHLS() {
+  if (hls) {
+    hls.destroy();
+    hls = null;
+  }
+  console.log("Initializing HLS stream...");
+  hls = new Hls(hlsConfig);
+  hls.loadSource(videoSrc);
+  hls.attachMedia(video);
+  hls.on(Hls.Events.MANIFEST_PARSED, function () {
+    // statusDiv.textContent = "Stream available. Playing...";
+    video.play().catch(error => {
+      console.error("Error playing video:", error);
+    });
+  });
+  hls.on(Hls.Events.ERROR, function(event, data) {
+    if (data.fatal) {
+      console.error("HLS fatal error:", data);
+      // Optionally, try reinitializing after a delay.
+      setTimeout(() => {
+        initializeHLS();
+      }, 5000);
+    }
+  });
+}
+
+// Function to check stream availability with a HEAD request
+function checkStreamAvailability() {
+  fetch(videoSrc, { method: 'HEAD' })
+    .then(response => {
+      if (response.ok) {
+        // statusDiv.textContent = "Stream available. Loading...";
+        if (!hls) {
+          initializeHLS();
+        }
+        clearInterval(pollingInterval);
+      } else {
+        // statusDiv.textContent = "Stream not available yet (status " + response.status + ").";
+        console.log("Stream not available yet, status: " + response.status);
+      }
+    })
+    .catch(error => {
+      // statusDiv.textContent = "Error checking stream.";
+      console.error("Error checking stream availability:", error);
+    });
+}
+
+// Start polling every 5 seconds to check if the stream is available.
+function startPolling() {
+  pollingInterval = setInterval(checkStreamAvailability, 5000);
+  checkStreamAvailability();
+}
+
+// Initially, start polling for stream availability.
+startPolling();
+
+// Listen for the "ended" event. When the stream ends, restart polling.
+// video.addEventListener("ended", function () {
+//   console.log("Video ended. Resetting stream...");
+//   if (hls) {
+//     hls.destroy();
+//     hls = null;
+//   }
+//   statusDiv.textContent = "Stream ended. Waiting for new stream...";
+//   startPolling();
+// });
