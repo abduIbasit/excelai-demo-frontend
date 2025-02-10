@@ -52,7 +52,6 @@ recordButton.addEventListener("click", async () => {
     hls.destroy();
     hls = null;
   }
-  // statusDiv.textContent = "Recording audio and generating stream...";
   
   if (!mediaRecorder) {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -116,16 +115,14 @@ function blobToBase64(blob) {
 }
 
 var video = document.getElementById('videoPlayer');
-// const statusDiv = document.getElementById('status');
-// Use HTTP on port 8080 since NGINX is serving HLS over HTTP
 var videoSrc = 'https://ec2-44-210-103-222.compute-1.amazonaws.com/hls/stream.m3u8';
 
 // hls.js configuration for low latency live streaming
 const hlsConfig = {
-  maxBufferLength: 5,         // Maximum buffer length in seconds
-  maxBufferSize: 0,           // 0 disables a fixed byte limit (using duration instead)
-  liveSyncDuration: 1,        // Target live sync duration in seconds
-  enableWorker: true          // Offload parsing to a web worker
+  maxBufferLength: 5,
+  maxBufferSize: 0,
+  liveSyncDuration: 1,
+  enableWorker: true
 };
 
 let hls = null;
@@ -137,23 +134,19 @@ function initializeHLS() {
     hls.destroy();
     hls = null;
   }
-  console.log("Initializing HLS stream...");
   hls = new Hls(hlsConfig);
   hls.loadSource(videoSrc);
   hls.attachMedia(video);
   hls.on(Hls.Events.MANIFEST_PARSED, function () {
-    // statusDiv.textContent = "Stream available. Playing...";
     video.play().catch(error => {
       console.error("Error playing video:", error);
     });
   });
   hls.on(Hls.Events.ERROR, function(event, data) {
     if (data.fatal) {
-      console.error("HLS fatal error:", data);
-      // Optionally, try reinitializing after a delay.
       setTimeout(() => {
         initializeHLS();
-      }, 5000);
+      }, 1000);
     }
   });
 }
@@ -163,38 +156,21 @@ function checkStreamAvailability() {
   fetch(videoSrc, { method: 'HEAD' })
     .then(response => {
       if (response.ok) {
-        // statusDiv.textContent = "Stream available. Loading...";
-        if (!hls) {
-          initializeHLS();
-        }
-        clearInterval(pollingInterval);
-      } else {
-        // statusDiv.textContent = "Stream not available yet (status " + response.status + ").";
-        console.log("Stream not available yet, status: " + response.status);
+        setTimeout(() => {
+          if (!hls) {
+            initializeHLS();
+          }
+          clearInterval(pollingInterval);
+        }, 1000);
       }
     })
-    .catch(error => {
-      // statusDiv.textContent = "Error checking stream.";
-      console.error("Error checking stream availability:", error);
-    });
 }
 
-// Start polling every 5 seconds to check if the stream is available.
+// Start polling every 2 seconds to check if the stream is available.
 function startPolling() {
-  pollingInterval = setInterval(checkStreamAvailability, 5000);
+  pollingInterval = setInterval(checkStreamAvailability, 2000);
   checkStreamAvailability();
 }
 
 // Initially, start polling for stream availability.
 startPolling();
-
-// Listen for the "ended" event. When the stream ends, restart polling.
-// video.addEventListener("ended", function () {
-//   console.log("Video ended. Resetting stream...");
-//   if (hls) {
-//     hls.destroy();
-//     hls = null;
-//   }
-//   statusDiv.textContent = "Stream ended. Waiting for new stream...";
-//   startPolling();
-// });
