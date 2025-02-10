@@ -118,7 +118,7 @@ function blobToBase64(blob) {
 var video = document.getElementById('videoPlayer');
 // const statusDiv = document.getElementById('status');
 // Use HTTP on port 8080 since NGINX is serving HLS over HTTP
-var videoSrc = 'https://ec2-44-210-103-222.compute-1.amazonaws.com:8080/hls/stream.m3u8';
+var videoSrc = 'https://ec2-44-210-103-222.compute-1.amazonaws.com/hls/stream.m3u8';
 
 // hls.js configuration for low latency live streaming
 const hlsConfig = {
